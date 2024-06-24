@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .content {
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .input-group {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        .input-group input {
+            flex: 1;
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .input-group select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .input-group .height-input {
+            flex: none;
+            width: 48%;
+        }
+        #age {
+            width: 100%; /* Make the age input full-width */
+        }
+        button {
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .output {
+            margin-top: 20px;
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 4px;
+        }
+        .good {
+            color: green;
+        }
+        .moderate {
+            color: orange;
+        }
+        .bad {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>BMI Calculator</h1>
+        <div class="content">
+            <form id="bmiForm">
+                <label for="age">Age:</label>
+                <input type="number" id="age" name="age" required>
+
+                <label for="height">Height:</label>
+                <div class="input-group">
+                    <input type="number" id="heightFeet" name="heightFeet" class="height-input" placeholder="Feet" required>
+                    <input type="number" id="heightInches" name="heightInches" class="height-input" placeholder="Inches" required>
+                </div>
+
+                <label for="weight">Weight:</label>
+                <div class="input-group">
+                    <input type="number" id="weight" name="weight" required>
+                    <select id="weightUnit" name="weightUnit">
+                        <option value="kg">Kilograms</option>
+                        <option value="lb">Pounds</option>
+                    </select>
+                </div>
+
+                <button type="submit">Calculate BMI</button>
+            </form>
+            <div class="output" id="output"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('bmiForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const age = document.getElementById('age').value;
+            const heightFeet = document.getElementById('heightFeet').value;
+            const heightInches = document.getElementById('heightInches').value;
+            let height = parseInt(heightFeet) * 0.3048 + parseInt(heightInches) * 0.0254;
+            let weight = document.getElementById('weight').value;
+            const weightUnit = document.getElementById('weightUnit').value;
+
+            // Convert weight to kilograms
+            if (weightUnit === 'lb') {
+                weight = weight * 0.453592;
+            }
+
+            const bmi = (weight / (height * height)).toFixed(2);
+
+            let status = '';
+            let tips = '';
+
+            if (bmi < 18.5) {
+                status = 'bad';
+                tips = 'Your BMI indicates that you are underweight. Consider eating nutrient-rich foods and consulting with a healthcare provider.';
+            } else if (bmi >= 18.5 && bmi < 24.9) {
+                status = 'good';
+                tips = 'Your BMI is in a healthy range. Continue maintaining a balanced diet and regular exercise.';
+            } else if (bmi >= 24.9 && bmi < 29.9) {
+                status = 'moderate';
+                tips = 'Your BMI indicates that you are overweight. Consider a balanced diet and regular physical activity.';
+            } else {
+                status = 'bad';
+                tips = 'Your BMI indicates obesity. It is important to consult with a healthcare provider for personalized advice and to consider lifestyle changes for improving health.';
+            }
+
+            document.getElementById('output').innerHTML = `
+                <p class="${status}">Your BMI is ${bmi}, which is considered ${status}.</p>
+                <p>${tips}</p>
+            `;
+        });
+    </script>
+
+</body>
+</html>
